@@ -175,8 +175,8 @@ from nrm_nonneg import NRM
 model_gauss = NRM(batch_size=batch_size, num_class=2).to(device)
 model_gauss.load_state_dict(th.load("models/model1.pth"),strict=False)
 
-train_pn = get_rpn(model_gauss, robopol_artifact_loader, len(robopol_artifact_loader))
-ood_pn = get_rpn(model_gauss, ood_test_data_loader, len(ood_test_data_loader))
+train_pn = get_loglikelihood(model_gauss, robopol_artifact_loader, len(robopol_artifact_loader))
+ood_pn = get_loglikelihood(model_gauss, ood_test_data_loader, len(ood_test_data_loader))
 
 volume = 64*64*3
 rpn_losses = [train_pn*volume, ood_pn*volume]
@@ -246,13 +246,6 @@ fpr, tpr, thresholds = roc_curve(labels_val,probs)
 plt.plot(fpr,tpr,'b')
 plt.plot(fpr,fpr,'r')
 s=900
-plt.scatter(0.05624,0.9346,label='Threshold: 0.2',marker='.',s=s)
-plt.scatter(0.03125,0.9797,label='Threshold: 0.5',marker=',',s=s)
-plt.scatter(0.03125,0.98,label='Threshold: 0.75',marker='^',s=s)
-plt.scatter(0.025,0.9595,label='Threshold: 0.9',marker='v',s=s)
-plt.scatter(0,0.8433,label='Threshold: 0.99',marker='o',s=s)
-plt.ylim(0.8,1)
-plt.xlim(-0.001,0.17)
 
 plt.legend()
 plt.xlabel('False Positive Rate')
